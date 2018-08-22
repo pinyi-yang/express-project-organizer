@@ -7,10 +7,23 @@ router.post('/', function(req, res) {
   db.project.create({
     name: req.body.name,
     githubLink: req.body.githubLink,
-    deployedLink: req.body.deployedLink,
+    deployLink: req.body.deployedLink,
     description: req.body.description
   })
   .then(function(project) {
+    var cats  = [];
+    if(req.body.categories){ cats = req.body.categories.split(','); }
+
+    cats.forEach(function(c){
+      db.category.findOrCreate({
+        where: { name: c.toLowerCase().trim() }
+      }).spread(function(foundCategory, wasCreated){
+        project.addCategory(foundCategory);
+      }).catch(function(err){
+        console.log("AHHHH", err);
+      });
+    });
+
     res.redirect('/');
   })
   .catch(function(error) {
@@ -26,7 +39,8 @@ router.get('/new', function(req, res) {
 // GET /projects/:id - display a specific project
 router.get('/:id', function(req, res) {
   db.project.find({
-    where: { id: req.params.id }
+    where: { id: req.params.id },
+    include: [db.category]
   })
   .then(function(project) {
     if (!project) throw Error();

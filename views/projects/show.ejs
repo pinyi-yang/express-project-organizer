@@ -5,7 +5,7 @@
   Github Link
 </a>
 
-<a class="btn btn-primary" href="<%= project.deployedLink %>" target="_blank">
+<a class="btn btn-primary" href="<%= project.deployLink %>" target="_blank">
   <i class="fa fa-globe" aria-hidden="true"></i>
   Deployed Link
 </a>
@@ -13,5 +13,13 @@
 <p><%= project.description %></p>
 
 <hr />
+
+<% if(project.categories && project.categories.length > 0){%>
+  <% project.categories.forEach(function(c){%>
+    <p>Category: <%= c.name %></p>
+  <%});%>
+<% } else {%>
+  <p>No cats for you</p>
+<% }%>
 
 <a href="/">&larr; Back Home</a>
