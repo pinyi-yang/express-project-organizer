@@ -29,7 +29,8 @@ router.post('/', function(req, res) {
     where: {id:parseInt(req.body.projectId)}
   }).spread(function(project, created) {
     let names = req.body.name.split(/,\s*/);
-    async.parallel(genAddCatFns(names, project), function(err, results){
+    let inputs = genAddCatFns(names, project);
+    async.parallel(inputs, function(err, results){
       console.log('added categories to project🎉🎉🎉🎉🎉');
       res.redirect('/projects/' + req.body.projectId);
     });
